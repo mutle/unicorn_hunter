@@ -1,0 +1,16 @@
+# Copy this to /etc/unicorn/unicorn_$APP_NAME.conf
+
+# Will run unicorn not unicorn_rails if APP_TYPE=rack
+#APP_TYPE=rack
+APP_TYPE=rails
+APP_ROOT=/path/to/your/app
+APP_ENV=production
+APP_RUBY=ruby
+APP_PRELOAD=true
+
+UNICORN_TIMEOUT=60
+#UNICORN_LISTEN=/var/run/unicorn/unicorn.sock
+UNICORN_LISTEN=3000
+UNICORN_BACKLOG=1024
+UNICORN_WORKERS=2
+UNICORN_PID_DIR=/var/run/unicorn
