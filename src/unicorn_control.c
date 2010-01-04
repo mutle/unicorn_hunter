@@ -15,7 +15,7 @@ unicorn *create_unicorn(char *name) {
   COPY_STRING(u->name, name);
   COPY_STRING(u->root, config_value(conf, "APP_ROOT", NULL));
   COPY_STRING(u->listen, config_value(conf, "UNICORN_LISTEN", "3000"));
-  COPY_STRING(u->environment, config_value(conf, "APP_ENV", "development"));
+  COPY_STRING(u->environment, config_value(conf, "APP_ENV", "production"));
   COPY_STRING(u->ruby, config_value(conf, "APP_RUBY", "ruby"));
   COPY_STRING(u->pid_path, config_value(conf, "UNICORN_PID_DIR", "/var/run/unicorn"));
   COPY_STRING(u->app_type, config_value(conf, "APP_TYPE", "rails"));
