@@ -11,13 +11,15 @@ unicorn *create_unicorn(char *name) {
   unicorn_config *conf = read_config_file(name);
   unicorn *u = malloc(sizeof(unicorn));
   char buf[1024];
-  u->pid = 0; u->num_workers = 3;
+  u->pid = 0; u->num_workers = 3; u->using_bundler = 0;
   COPY_STRING(u->name, name);
   COPY_STRING(u->root, config_value(conf, "APP_ROOT", NULL));
   COPY_STRING(u->listen, config_value(conf, "UNICORN_LISTEN", "3000"));
   COPY_STRING(u->environment, config_value(conf, "APP_ENV", "development"));
   COPY_STRING(u->ruby, config_value(conf, "APP_RUBY", "ruby"));
   COPY_STRING(u->pid_path, config_value(conf, "UNICORN_PID_DIR", "/var/run/unicorn"));
+  COPY_STRING(u->app_type, config_value(conf, "APP_TYPE", "rails"));
+  if(STREQ(config_value(conf, "BUNDLER", "false"), "true")) u->using_bundler = 1;
   sprintf(buf, "%s/unicorn.%s.hunter.pid", u->pid_path, u->name);
   COPY_STRING(u->hunter_pid_file, buf);
   sprintf(buf, "%s/unicorn.%s.pid", u->pid_path, u->name);
@@ -65,7 +67,10 @@ void start_unicorn(unicorn *u) {
     // Exec unicorn in child process
     chdir(u->root);
     char **env = unicorn_env(u->name, u->conf);
-    sprintf(unicorn_command, "bin/unicorn_rails -D -E %s -c config/unicorn.rb", u->environment);
+    char *unicorn_binary = (STREQ(u->app_type, "rails") ? "unicorn_rails" : "unicorn");
+    char *unicorn_binary_prefix = (u->using_bundler ? "bin/" : "");
+    char *ruby_prefix = (!STREQ(u->ruby, "ruby") ? u->ruby : "");
+    sprintf(unicorn_command, "%s %s%s -D -E %s -c config/unicorn.rb", ruby_prefix, unicorn_binary_prefix, unicorn_binary, u->environment);
     if(execle("/bin/sh", "/bin/sh", "-c", unicorn_command, NULL, env) == -1) {
       log_message("Failed to start unicorn");
     }

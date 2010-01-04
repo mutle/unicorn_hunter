@@ -3,10 +3,12 @@
 void log_unicorn(unicorn *u) {
   printf("Unicorn %s:\n", u->name);
   printf("  Root: %s\n", u->root);
+  printf("  Type: %s\n", u->app_type);
   printf("  Environment: %s\n", u->environment);
   printf("  Pid: %d%s\n", u->pid, (u->pid == 0 ? " (not running)" : ""));
   printf("  Listen: %s\n", u->listen);
   printf("  Workers: %d\n", u->num_workers);
+  printf("  Using Bundler: %s\n", (u->using_bundler ? "yes" : "no"));
   printf("  Ruby executable: %s\n", u->ruby);
   printf("  Pid file: %s\n", unicorn_pid_path(u));
   printf("  Hunter Pid file: %s\n", unicorn_hunter_pid_path(u));

@@ -26,9 +26,11 @@ typedef struct unicorn {
   char *root;
   char *environment;
   char *ruby;
+  char *app_type;
   char *pid_path;
   char *hunter_pid_file;
   char *pid_file;
+  int using_bundler;
   unicorn_config *conf;
 } unicorn;
 
